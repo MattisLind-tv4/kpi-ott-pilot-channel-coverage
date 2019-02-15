@@ -124,6 +124,7 @@ const getDataFromSessionIds = (sessionIds) => {
                     "channel_info.channel_name",
                     "platformName",
                     "uiVersion",
+                    "nativeVersion",
                     "accountId",
                     "payload",
                     "channel_id",
@@ -184,7 +185,6 @@ const parseSessionsAndExtractLogData = (sessionData) => {
     const {
       accountId,
       platformName,
-      uiVersion,
       payload,
       country
     } = session[0];
@@ -196,7 +196,7 @@ const parseSessionsAndExtractLogData = (sessionData) => {
       sessionStartTime: payload.timestamp,
       sessionStopTime: lastPayload.timestamp,
       platformName,
-      uiVersion,
+      clientVersion: session[0].nativeVersion?"NATIVE-"+session[0].nativeVersion:"UI-"+ session[0].uiVersion,
       country
     };
 
@@ -287,10 +287,10 @@ const analyseSessionsAndCombineWithLogData = (sessionsAndLogData) => {
       accumulatedViewingStats[channelSession.platformName] = {};
     }
     if ((typeof accumulatedViewingStats[channelSession.platformName][channelSession.uiVersion])=='undefined') {
-      accumulatedViewingStats[channelSession.platformName][channelSession.uiVersion] = {};
+      accumulatedViewingStats[channelSession.platformName][channelSession.clientVersion] = {};
     }
     if ((typeof accumulatedViewingStats[channelSession.platformName][channelSession.uiVersion][channelSession.channelId])=='undefined') {
-      accumulatedViewingStats[channelSession.platformName][channelSession.uiVersion][channelSession.channelId] = {
+      accumulatedViewingStats[channelSession.platformName][channelSession.clientVersion][channelSession.channelId] = {
         count: 1,
         time: channelSession.sessionStopTime-channelSession.sessionStartTime,
         accounts: [channelSession.accountId],
@@ -298,7 +298,7 @@ const analyseSessionsAndCombineWithLogData = (sessionsAndLogData) => {
         country: channelSession.country
     };
     } else {
-      var rec = accumulatedViewingStats[channelSession.platformName][channelSession.uiVersion][channelSession.channelId];
+      var rec = accumulatedViewingStats[channelSession.platformName][channelSession.clientVersion][channelSession.channelId];
       rec.count++;
       rec.time += channelSession.sessionStopTime-channelSession.sessionStartTime;
       if (rec.accounts.indexOf(channelSession.accountId) == -1) {
@@ -313,17 +313,17 @@ const analyseSessionsAndCombineWithLogData = (sessionsAndLogData) => {
   var dataRecordsToUpload = [];
 
   Object.keys(aggregatedData).forEach(function (platform) {
-    Object.keys(aggregatedData[platform]).forEach(function (uiVersion) {
+    Object.keys(aggregatedData[platform]).forEach(function (clientVersion) {
       Object.keys(aggregatedData[platform][uiVersion]).forEach(function (channelId) {
         dataRecordsToUpload.push ({
           platform: platform,
-          uiVersion: uiVersion,
+          clientVersion: clientVersion,
           channelId: channelId,
-          channelName: aggregatedData[platform][uiVersion][channelId].channelName,
-          time:aggregatedData[platform][uiVersion][channelId].time,
-          cnt:aggregatedData[platform][uiVersion][channelId].count,
-          accounts:aggregatedData[platform][uiVersion][channelId].accounts,
-          country:aggregatedData[platform][uiVersion][channelId].country
+          channelName: aggregatedData[platform][clientVersion][channelId].channelName,
+          time:aggregatedData[platform][clientVersion][channelId].time,
+          cnt:aggregatedData[platform][clientVersion][channelId].count,
+          accounts:aggregatedData[platform][clientVersion][channelId].accounts,
+          country:aggregatedData[platform][clientVersion][channelId].country
         });
       });
     });
@@ -338,7 +338,7 @@ const logResults = (dataRecordsToUpload) => {
     console.log (`
     ----------------------------
       platform: ${data.platform}
-      uiVersion: ${data.uiVersion}
+      clientVersion: ${data.clientVersion}
       channelId: ${data.channelId}
       channelName: ${data.channelName}
       Time: ${parseInt(data.time/1000)}
@@ -376,7 +376,7 @@ const uploadResultsToElastic = (dataRecordsToUpload) => {
   const scaleAndConvertData = (data) => {
     var tmp = {
       platform: data.platform,
-      uiVersion: data.uiVersion,
+      clientVersion: data.clientVersion,
       channelId: data.channelId,
       channelName: data.channelName,
       time: parseInt(data.time/1000),
@@ -385,7 +385,7 @@ const uploadResultsToElastic = (dataRecordsToUpload) => {
       country: data.country,
       type: "OTTPilotLiveStatistics",
       timestamp: now,
-      version: "5"
+      version: "6"
     };
     return tmp;
   };
