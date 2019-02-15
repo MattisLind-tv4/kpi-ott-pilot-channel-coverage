@@ -32,7 +32,7 @@ The program takes a set of options.
  -d <index> or --upload=<index>. The destination index to upload to to store the result of the aggregation.
  -t <type> or --type=<type>. The document type to store the uploaded documents under.
  -f <kafka host> or --kafka=<kafka host>. Use kafka to upload the result of the aggregation. Need topic option as well.
- -t <topic> or -topic=<topic>. A topic is needed if kafka option is to be used.
+ -c <topic> or -topic=<topic>. A topic is needed if kafka option is to be used.
  -i <interval> or -daemon=<interval>. Time interval for running the program.
 ```
 
