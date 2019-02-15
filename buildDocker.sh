@@ -8,8 +8,7 @@ cp finiteStateMachine.js $TEMP
 cp index.js $TEMP
 cp kafkaclient.js $TEMP
 cp kibanaproxy.js $TEMP
-cp queryBuilder.js $TEMP
 cp Dockerfile $TEMP
-docker build -t stalled-buffering-kpi-docker $DOCKER_OPTIONS $TEMP
-docker save -o stalled-buffering-kpi-docker.tar stalled-buffering-kpi-docker 
+docker build -t kpi-ott-pilot-channel-coverage-docker $DOCKER_OPTIONS $TEMP
+docker save -o kpi-ott-pilot-channel-coverage-docker.tar  kpi-ott-pilot-channel-coverage-docker
 rm -rf $TEMP
