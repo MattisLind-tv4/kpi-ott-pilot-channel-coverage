@@ -286,10 +286,10 @@ const analyseSessionsAndCombineWithLogData = (sessionsAndLogData) => {
     if ((typeof accumulatedViewingStats[channelSession.platformName]) == 'undefined') {
       accumulatedViewingStats[channelSession.platformName] = {};
     }
-    if ((typeof accumulatedViewingStats[channelSession.platformName][channelSession.uiVersion])=='undefined') {
+    if ((typeof accumulatedViewingStats[channelSession.platformName][channelSession.clientVersion])=='undefined') {
       accumulatedViewingStats[channelSession.platformName][channelSession.clientVersion] = {};
     }
-    if ((typeof accumulatedViewingStats[channelSession.platformName][channelSession.uiVersion][channelSession.channelId])=='undefined') {
+    if ((typeof accumulatedViewingStats[channelSession.platformName][channelSession.clientVersion][channelSession.channelId])=='undefined') {
       accumulatedViewingStats[channelSession.platformName][channelSession.clientVersion][channelSession.channelId] = {
         count: 1,
         time: channelSession.sessionStopTime-channelSession.sessionStartTime,
@@ -314,7 +314,7 @@ const analyseSessionsAndCombineWithLogData = (sessionsAndLogData) => {
 
   Object.keys(aggregatedData).forEach(function (platform) {
     Object.keys(aggregatedData[platform]).forEach(function (clientVersion) {
-      Object.keys(aggregatedData[platform][uiVersion]).forEach(function (channelId) {
+      Object.keys(aggregatedData[platform][clientVersion]).forEach(function (channelId) {
         dataRecordsToUpload.push ({
           platform: platform,
           clientVersion: clientVersion,
