@@ -362,7 +362,7 @@ const uploadResultsToElastic = (dataRecordsToUpload) => {
       if (kafka) {
         return kafkaClient.create(p);
       } else {
-        return elasticClient.create(p);
+        return elasticClient.index(p);
       }
 
     }
