@@ -9,6 +9,5 @@ COPY finiteStateMachine.js ./
 COPY index.js ./
 COPY kafkaclient.js ./
 COPY kibanaproxy.js ./
-COPY queryBuilder.js ./
 ENTRYPOINT ["/usr/local/bin/node","index.js"]
 CMD []

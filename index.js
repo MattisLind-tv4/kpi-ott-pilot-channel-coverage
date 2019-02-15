@@ -385,7 +385,7 @@ const uploadResultsToElastic = (dataRecordsToUpload) => {
       country: data.country,
       type: "OTTPilotLiveStatistics",
       timestamp: now,
-      version: "4"
+      version: "5"
     };
     return tmp;
   };
